@@ -236,6 +236,8 @@ function getRequestParam(ctx: any, paramType: string, meta: RequestParamMeta): a
     value = ctx.query[meta.name];
   } else if (isWwwFormUrlencoded(ctx)) {
     value = ctx.request.body[meta.name];
+  } else if (isJson(ctx)) {
+    value = ctx.request.body[meta.name];
   } else if (isMultipart(ctx)) {
     value = ctx.req.body[meta.name];
   }
@@ -255,6 +257,11 @@ function isWwwFormUrlencoded(ctx: any): boolean {
 function isMultipart(ctx: any): boolean {
   const contentType = ctx.headers['content-type'];
   return typeof contentType === 'string' && contentType.indexOf('multipart/form-data') !== -1;
+}
+
+function isJson(ctx: any) {
+  const contentType = ctx.headers['content-type'];
+  return contentType === 'application/json';
 }
 
 function convertValue(value: any, paramType: string, meta: RequestParamMeta): any {
